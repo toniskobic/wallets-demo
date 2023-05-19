@@ -36,23 +36,23 @@
 
         private readonly GoogleApplicationCredentials _googleApplicationCredentials;
         private readonly IEmailService _emailSender;
-        private readonly IGenericPassService _demoGeneric;
+        private readonly IGenericPassService _genericPassService;
 
         public EventService(
             IOptions<GoogleApplicationCredentials> googleApplicationCredentials,
             IEmailService emailSender,
-            IGenericPassService demoGeneric)
+            IGenericPassService genericPassService)
         {
             _googleApplicationCredentials = googleApplicationCredentials.Value;
             _emailSender = emailSender;
-            _demoGeneric = demoGeneric;
+            _genericPassService = genericPassService;
         }
 
         public async Task SubscribeAsync(string email)
         {
             var objectId = Guid.NewGuid().ToString();
-            _demoGeneric.CreateObject(_googleApplicationCredentials.Issuer, _googleApplicationCredentials.Class, objectId);
-            string link = _demoGeneric.CreateJWTNewObjects(_googleApplicationCredentials.Issuer, _googleApplicationCredentials.Class, objectId);
+            _genericPassService.CreateObject(_googleApplicationCredentials.Issuer, _googleApplicationCredentials.Class, objectId);
+            string link = _genericPassService.CreateJWTNewObjects(_googleApplicationCredentials.Issuer, _googleApplicationCredentials.Class, objectId);
 
             var buildDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Attachment attachment = new Attachment(@$"{buildDir}\{Constants.GOOGLE_WALLET_BUTTON_PATH}");
